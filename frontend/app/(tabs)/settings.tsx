@@ -24,6 +24,10 @@ import { downloadAllAudio, clearDownloadedAudio, isAudioDownloaded } from "@/src
 import { storage } from "@/src/utils/storage";
 import { cities } from "@/src/data/otherAdhkar";
 import { CURRENT_VERSION, checkForUpdates, promptUpdate } from "@/src/utils/updateCheck";
+import { Linking } from "react-native";
+
+const TIKTOK_URL = "https://www.tiktok.com/@book_jintl";
+const REPORT_EMAIL = "book_jintl@example.com";
 
 const PRAYER_OFFSETS = [5, 10, 15, 30];
 
@@ -323,6 +327,61 @@ export default function SettingsScreen() {
             <Text style={styles.rowLabel}>التحقق من التحديثات</Text>
             <Ionicons name="chevron-back" size={20} color="#CBD5E1" />
           </TouchableOpacity>
+          <View style={styles.divider} />
+          <TouchableOpacity
+            testID="tiktok-btn"
+            style={styles.row}
+            onPress={() => Linking.openURL(TIKTOK_URL).catch(() => {})}
+          >
+            <Ionicons name="logo-tiktok" size={22} color={COLORS.gold} />
+            <Text style={styles.rowLabel}>تابعنا على تيك توك</Text>
+            <Text style={styles.rowHint}>@book_jintl</Text>
+          </TouchableOpacity>
+          <View style={styles.divider} />
+          <TouchableOpacity
+            testID="report-ad-btn"
+            style={styles.row}
+            onPress={() => {
+              Alert.alert(
+                "الإبلاغ عن إعلان مخالف",
+                "إذا واجهت إعلاناً مخالفاً للذوق العام أو الشريعة الإسلامية، يرجى التواصل معنا عبر:",
+                [
+                  { text: "إلغاء", style: "cancel" },
+                  {
+                    text: "تيك توك",
+                    onPress: () => Linking.openURL(TIKTOK_URL).catch(() => {}),
+                  },
+                  {
+                    text: "بريد إلكتروني",
+                    onPress: () =>
+                      Linking.openURL(
+                        `mailto:${REPORT_EMAIL}?subject=${encodeURIComponent("إبلاغ عن إعلان مخالف")}`
+                      ).catch(() => {}),
+                  },
+                ]
+              );
+            }}
+          >
+            <Ionicons name="alert-circle" size={22} color={COLORS.gold} />
+            <Text style={styles.rowLabel}>الإبلاغ عن إعلان مخالف</Text>
+            <Ionicons name="chevron-back" size={20} color="#CBD5E1" />
+          </TouchableOpacity>
+          <View style={styles.divider} />
+          <TouchableOpacity
+            testID="share-app-btn"
+            style={styles.row}
+            onPress={() => {
+              Alert.alert(
+                "ساهم في نشر الخير 🌹",
+                "شارك التطبيق مع أهلك وأصدقائك ليصلك أجرهم بإذن الله.",
+                [{ text: "حسناً" }]
+              );
+            }}
+          >
+            <Ionicons name="share-social" size={22} color={COLORS.gold} />
+            <Text style={styles.rowLabel}>مشاركة التطبيق</Text>
+            <Ionicons name="chevron-back" size={20} color="#CBD5E1" />
+          </TouchableOpacity>
         </View>
 
         <View style={{ height: 30 }} />
@@ -369,6 +428,7 @@ const styles = StyleSheet.create({
   },
   row: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 8 },
   rowLabel: { color: "#FFFFFF", fontSize: 15, flex: 1, fontWeight: "600" },
+  rowHint: { color: "#CBD5E1", fontSize: 13 },
   divider: { height: 1, backgroundColor: "rgba(255,255,255,0.08)" },
   chipRow: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 4 },
   chip: {
