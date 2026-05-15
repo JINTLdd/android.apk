@@ -14,14 +14,15 @@ import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
 import { useTheme, COLORS } from "@/src/context/ThemeContext";
 import { morningEveningAdhkar, DhikrItem } from "@/src/data/morningAdhkar";
-import { sleepAdhkar, wakeupAdhkar, afterPrayerAdhkar } from "@/src/data/otherAdhkar";
+import { wakeupAdhkar, afterPrayerAdhkar } from "@/src/data/otherAdhkar";
+import { sleepAdhkarExpanded } from "@/src/data/extraAdhkar";
 import { playAudio, stopCurrent, pauseCurrent, resumeCurrent } from "@/src/utils/audioPlayer";
 import { storage } from "@/src/utils/storage";
 
 const CATEGORY_MAP: Record<string, { title: string; items: DhikrItem[] }> = {
   morning: { title: "أذكار الصباح", items: morningEveningAdhkar },
   evening: { title: "أذكار المساء", items: morningEveningAdhkar },
-  sleep: { title: "أذكار النوم", items: sleepAdhkar },
+  sleep: { title: "أذكار النوم", items: sleepAdhkarExpanded },
   wakeup: { title: "أذكار الاستيقاظ من النوم", items: wakeupAdhkar },
   "after-prayer": { title: "أذكار بعد الصلاة", items: afterPrayerAdhkar },
 };

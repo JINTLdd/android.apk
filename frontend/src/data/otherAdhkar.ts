@@ -294,6 +294,8 @@ export const adhanOptions = [
 
 // Predefined cities
 export const cities = [
+  { id: "makkah", name: "مكة المكرمة", lat: 21.4225, lng: 39.8262 },
+  { id: "madinah", name: "المدينة المنورة", lat: 24.4672, lng: 39.6111 },
   { id: "aden", name: "عدن", lat: 12.7855, lng: 45.0187 },
   { id: "sanaa", name: "صنعاء", lat: 15.3694, lng: 44.1910 },
   { id: "riyadh", name: "الرياض", lat: 24.7136, lng: 46.6753 },
