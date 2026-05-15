@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
+import { Linking } from "react-native";
 import { useTheme, COLORS } from "@/src/context/ThemeContext";
 import { adhanOptions, cities, postAdhanDua } from "@/src/data/otherAdhkar";
 import { getPrayerTimes, formatTime, getNextPrayer, PRAYER_LABELS_AR, PrayerName } from "@/src/utils/prayerTimes";
@@ -79,11 +80,39 @@ export default function AdhanScreen() {
     if (save) await storage.setItem("adhan_city", id);
 
     if (id === "current") {
-      const { status } = await Location.requestForegroundPermissionsAsync();
+      // Show pre-permission explanation
+      const goAhead = await new Promise<boolean>((resolve) => {
+        Alert.alert(
+          "تحديد موقعك 📍",
+          "نحتاج إذن الموقع لحساب مواقيت الصلاة في مدينتك بدقة. لن نشارك موقعك مع أي جهة.",
+          [
+            { text: "إلغاء", style: "cancel", onPress: () => resolve(false) },
+            { text: "متابعة", onPress: () => resolve(true) },
+          ]
+        );
+      });
+      if (!goAhead) {
+        setCityId("aden");
+        return;
+      }
+      const perm = await Location.getForegroundPermissionsAsync();
+      let status = perm.status;
       if (status !== "granted") {
-        Alert.alert("الإذن مطلوب", "يحتاج التطبيق للوصول للموقع لحساب المواقيت", [
-          { text: "حسناً" },
-        ]);
+        const req = await Location.requestForegroundPermissionsAsync();
+        status = req.status;
+        if (status !== "granted" && !req.canAskAgain) {
+          Alert.alert(
+            "إذن الموقع معطل",
+            "لاستخدام موقعك، يرجى تفعيل إذن الموقع من إعدادات الهاتف.",
+            [
+              { text: "ليس الآن", style: "cancel" },
+              { text: "فتح الإعدادات", onPress: () => Linking.openSettings().catch(() => {}) },
+            ]
+          );
+        }
+      }
+      if (status !== "granted") {
+        setCityId("aden");
         return;
       }
       try {

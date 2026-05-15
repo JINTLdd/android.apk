@@ -1,5 +1,5 @@
 import * as Notifications from "expo-notifications";
-import { Platform } from "react-native";
+import { Platform, Alert, Linking } from "react-native";
 import { storage } from "@/src/utils/storage";
 import { getPrayerTimes, PRAYER_LABELS_AR, PrayerName } from "./prayerTimes";
 
@@ -12,25 +12,63 @@ Notifications.setNotificationHandler({
   }),
 });
 
-export async function ensureNotificationPermissions(): Promise<boolean> {
-  const { status } = await Notifications.getPermissionsAsync();
-  if (status === "granted") return true;
-  const req = await Notifications.requestPermissionsAsync();
-  if (Platform.OS === "android") {
-    await Notifications.setNotificationChannelAsync("adhkari-default", {
-      name: "أذكاري",
-      importance: Notifications.AndroidImportance.MAX,
-      sound: "default",
-      vibrationPattern: [0, 250, 250, 250],
-    });
-    await Notifications.setNotificationChannelAsync("adhan-channel", {
-      name: "الأذان",
-      importance: Notifications.AndroidImportance.MAX,
-      sound: "default",
-      vibrationPattern: [0, 500, 250, 500],
+/**
+ * Contextual notification permission request following best practices:
+ * 1. Show pre-permission explanation focused on user benefit
+ * 2. Request native permission
+ * 3. If denied & canAskAgain → optionally re-ask later
+ * 4. If denied & !canAskAgain → show Open Settings button
+ */
+export async function ensureNotificationPermissions(showRationale = true): Promise<boolean> {
+  const current = await Notifications.getPermissionsAsync();
+  if (current.status === "granted") {
+    await setupAndroidChannels();
+    return true;
+  }
+
+  if (showRationale && current.status === "undetermined") {
+    await new Promise<void>((resolve) => {
+      Alert.alert(
+        "تفعيل الإشعارات 🔔",
+        "نحتاج إذن الإشعارات لتذكيرك بـ:\n• أذكار الصباح (5:00 ص)\n• أذكار المساء (5:00 م)\n• أذكار النوم (9:00 م)\n• مواقيت الصلاة\n\nستعمل الإشعارات حتى عند إغلاق التطبيق.",
+        [{ text: "موافق", onPress: () => resolve() }]
+      );
     });
   }
-  return req.status === "granted";
+
+  const req = await Notifications.requestPermissionsAsync();
+  await setupAndroidChannels();
+
+  if (req.status !== "granted") {
+    if (!req.canAskAgain) {
+      Alert.alert(
+        "الإشعارات معطلة",
+        "لتلقي تنبيهات الأذكار والصلاة، يرجى تفعيل الإشعارات من إعدادات الهاتف.",
+        [
+          { text: "ليس الآن", style: "cancel" },
+          { text: "فتح الإعدادات", onPress: () => Linking.openSettings().catch(() => {}) },
+        ]
+      );
+    }
+    return false;
+  }
+  return true;
+}
+
+async function setupAndroidChannels() {
+  if (Platform.OS !== "android") return;
+  await Notifications.setNotificationChannelAsync("adhkari-default", {
+    name: "أذكاري",
+    importance: Notifications.AndroidImportance.MAX,
+    sound: "default",
+    vibrationPattern: [0, 250, 250, 250],
+  });
+  await Notifications.setNotificationChannelAsync("adhan-channel", {
+    name: "الأذان",
+    importance: Notifications.AndroidImportance.MAX,
+    sound: "default",
+    vibrationPattern: [0, 500, 250, 500],
+  });
 }
 
 export async function cancelAll() {
