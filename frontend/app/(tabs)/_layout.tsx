@@ -1,10 +1,28 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useFonts } from "expo-font";
 import { useTheme, COLORS } from "@/src/context/ThemeContext";
-import { Platform } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View, ActivityIndicator } from "react-native";
 
 export default function TabsLayout() {
   const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
+  // Make sure the icon font is fully loaded before rendering tabs (fixes
+  // missing-glyph squares on Expo Go cold start).
+  const [fontsLoaded] = useFonts(Ionicons.font);
+
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.bg, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size="large" color={COLORS.gold} />
+      </View>
+    );
+  }
+
+  // Reserve space for system navigation bar / gesture handle.
+  const bottomPad = Math.max(insets.bottom, 12) + 10;
+  const tabHeight = 60 + bottomPad;
 
   return (
     <Tabs
@@ -16,8 +34,8 @@ export default function TabsLayout() {
           backgroundColor: colors.surface,
           borderTopColor: "rgba(212,175,55,0.25)",
           borderTopWidth: 1,
-          height: Platform.OS === "ios" ? 88 : 68,
-          paddingBottom: Platform.OS === "ios" ? 28 : 10,
+          height: tabHeight,
+          paddingBottom: bottomPad,
           paddingTop: 8,
         },
         tabBarLabelStyle: { fontSize: 12, fontWeight: "600" },
