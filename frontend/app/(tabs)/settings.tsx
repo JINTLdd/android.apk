@@ -23,6 +23,7 @@ import {
 import { downloadAllAudio, clearDownloadedAudio, isAudioDownloaded } from "@/src/utils/audioDownload";
 import { storage } from "@/src/utils/storage";
 import { cities } from "@/src/data/otherAdhkar";
+import { CURRENT_VERSION, checkForUpdates, promptUpdate } from "@/src/utils/updateCheck";
 
 const PRAYER_OFFSETS = [5, 10, 15, 30];
 
@@ -303,8 +304,29 @@ export default function SettingsScreen() {
           )}
         </View>
 
-        <View style={{ height: 40 }} />
-        <Text style={styles.versionText}>أذكاري • الإصدار 1.0.0</Text>
+        <View style={{ height: 20 }} />
+        <Text style={styles.sectionLabel}>التطبيق</Text>
+        <View style={[styles.card, { backgroundColor: colors.surface }]}>
+          <TouchableOpacity
+            testID="check-update-btn"
+            style={styles.row}
+            onPress={async () => {
+              const r = await checkForUpdates();
+              if (r?.shouldUpdate) {
+                promptUpdate(r.message, r.url, r.force);
+              } else {
+                Alert.alert("التطبيق محدّث", "أنت تستخدم أحدث إصدار من أذكاري ✅");
+              }
+            }}
+          >
+            <Ionicons name="cloud-upload" size={22} color={COLORS.gold} />
+            <Text style={styles.rowLabel}>التحقق من التحديثات</Text>
+            <Ionicons name="chevron-back" size={20} color="#CBD5E1" />
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ height: 30 }} />
+        <Text style={styles.versionText}>أذكاري • الإصدار {CURRENT_VERSION}</Text>
       </ScrollView>
     </SafeAreaView>
   );
