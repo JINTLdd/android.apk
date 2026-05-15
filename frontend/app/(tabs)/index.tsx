@@ -34,7 +34,6 @@ export default function Home() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.bg }]} edges={["top"]}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.header}>
-          <Text style={styles.bismillah}>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</Text>
           <Text style={styles.title} testID="home-title">أذكاري</Text>
           <Text style={styles.subtitle}>حصن المسلم في جيبك</Text>
         </View>
