@@ -7,6 +7,7 @@ import { miscAdhkar, istiftahAdhkar } from "@/src/data/otherAdhkar";
 import { moreSections } from "@/src/data/extraAdhkar";
 import { DhikrItem } from "@/src/data/morningAdhkar";
 import { playAudio, stopCurrent } from "@/src/utils/audioPlayer";
+import { PatternBackground } from "@/src/components/PatternBackground";
 
 interface Section {
   id: string;
@@ -60,7 +61,8 @@ export default function MoreScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.bg }]} edges={["top"]}>
+    <PatternBackground>
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
         <Text style={styles.title}>المزيد من الأذكار</Text>
         <Text style={styles.subtitle}>{SECTIONS.length} أقسام</Text>
@@ -129,6 +131,7 @@ export default function MoreScreen() {
         <View style={{ height: 30 }} />
       </ScrollView>
     </SafeAreaView>
+    </PatternBackground>
   );
 }
 

@@ -19,6 +19,7 @@ import { adhanOptions, cities, postAdhanDua } from "@/src/data/otherAdhkar";
 import { getPrayerTimes, formatTime, getNextPrayer, PRAYER_LABELS_AR, PrayerName } from "@/src/utils/prayerTimes";
 import { playAudio, stopCurrent, pauseCurrent } from "@/src/utils/audioPlayer";
 import { storage } from "@/src/utils/storage";
+import { PatternBackground } from "@/src/components/PatternBackground";
 
 const MOSQUE_IMG = "https://images.unsplash.com/photo-1692566123227-0f68f1b9dac6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwyfHxwcm9waGV0JTIwbW9zcXVlJTIwbWFkaW5haHxlbnwwfHx8fDE3Nzg4NjI4Nzh8MA&ixlib=rb-4.1.0&q=85";
 
@@ -179,7 +180,8 @@ export default function AdhanScreen() {
   const remMins = minsTo % 60;
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.bg }]} edges={["top"]}>
+    <PatternBackground>
+      <SafeAreaView style={styles.container} edges={["top"]}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.pageTitle}>الأذان ومواقيت الصلاة</Text>
 
@@ -306,6 +308,7 @@ export default function AdhanScreen() {
         </View>
       </Modal>
     </SafeAreaView>
+    </PatternBackground>
   );
 }
 

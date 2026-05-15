@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { useTheme, COLORS } from "@/src/context/ThemeContext";
 import { refreshInactiveReminder } from "@/src/utils/notifications";
 import { useEffect } from "react";
+import { PatternBackground } from "@/src/components/PatternBackground";
 
 interface CategoryCard {
   id: string;
@@ -31,8 +32,9 @@ export default function Home() {
   }, []);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.bg }]} edges={["top"]}>
-      <ScrollView contentContainerStyle={styles.scroll}>
+    <PatternBackground>
+      <SafeAreaView style={styles.container} edges={["top"]}>
+        <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.header}>
           <Text style={styles.title} testID="home-title">أذكاري</Text>
           <Text style={styles.subtitle}>حصن المسلم في جيبك</Text>
@@ -74,6 +76,7 @@ export default function Home() {
         <View style={{ height: 30 }} />
       </ScrollView>
     </SafeAreaView>
+    </PatternBackground>
   );
 }
 

@@ -18,6 +18,7 @@ import { wakeupAdhkar, afterPrayerAdhkar } from "@/src/data/otherAdhkar";
 import { sleepAdhkarExpanded } from "@/src/data/extraAdhkar";
 import { playAudio, stopCurrent, pauseCurrent, resumeCurrent } from "@/src/utils/audioPlayer";
 import { storage } from "@/src/utils/storage";
+import { PatternBackground } from "@/src/components/PatternBackground";
 
 const CATEGORY_MAP: Record<string, { title: string; items: DhikrItem[] }> = {
   morning: { title: "أذكار الصباح", items: morningEveningAdhkar },
@@ -125,7 +126,8 @@ export default function Session() {
 
   if (completed) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.bg }]}>
+      <PatternBackground>
+        <SafeAreaView style={styles.container}>
         <View style={styles.completedWrap}>
           <View style={[styles.completedCard, { backgroundColor: colors.surface }]}>
             <Ionicons name="checkmark-circle" size={92} color={COLORS.gold} />
@@ -151,13 +153,15 @@ export default function Session() {
           </View>
         </View>
       </SafeAreaView>
+      </PatternBackground>
     );
   }
 
   const progress = current.count > 0 ? Math.min(count / current.count, 1) : 0;
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.bg }]} edges={["top", "bottom"]}>
+    <PatternBackground>
+      <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
       <View style={styles.topBar}>
         <TouchableOpacity testID="back-btn" onPress={() => router.back()} hitSlop={10}>
           <Ionicons name="chevron-forward" size={28} color="#FFFFFF" />
@@ -226,6 +230,7 @@ export default function Session() {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
+    </PatternBackground>
   );
 }
 
