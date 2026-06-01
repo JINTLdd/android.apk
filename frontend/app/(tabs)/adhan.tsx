@@ -14,25 +14,32 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { Linking } from "react-native";
+import { useLocalSearchParams } from "expo-router";
 import { useTheme, COLORS } from "@/src/context/ThemeContext";
 import { adhanOptions, cities, postAdhanDua } from "@/src/data/otherAdhkar";
 import { getPrayerTimes, formatTime, getNextPrayer, PRAYER_LABELS_AR, PrayerName } from "@/src/utils/prayerTimes";
 import { playAudio, stopCurrent, pauseCurrent } from "@/src/utils/audioPlayer";
 import { storage } from "@/src/utils/storage";
 import { PatternBackground } from "@/src/components/PatternBackground";
+import { PRAYER_MOSQUE_IMAGES, AZAN_TEXT_LINES } from "@/src/data/floatingDuas";
 
 const MOSQUE_IMG = "https://images.unsplash.com/photo-1692566123227-0f68f1b9dac6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwyfHxwcm9waGV0JTIwbW9zcXVlJTIwbWFkaW5haHxlbnwwfHx8fDE3Nzg4NjI4Nzh8MA&ixlib=rb-4.1.0&q=85";
 
 export default function AdhanScreen() {
   const { colors } = useTheme();
+  const params = useLocalSearchParams<{ autoplay?: string; prayer?: string }>();
   const [cityId, setCityId] = useState<string>("aden");
   const [coords, setCoords] = useState({ lat: 12.7855, lng: 45.0187 });
   const [selectedMuezzin, setSelectedMuezzin] = useState(adhanOptions[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showAdhanFull, setShowAdhanFull] = useState(false);
+  const [activePrayer, setActivePrayer] = useState<PrayerName>("fajr");
+  const [azanLineIdx, setAzanLineIdx] = useState(0);
   const [showDuaPopup, setShowDuaPopup] = useState(false);
   const [duaPlaying, setDuaPlaying] = useState(false);
   const lastAdhanRef = useRef<{ prayer: PrayerName; ts: number } | null>(null);
+  const handledParamRef = useRef(false);
   const [, forceTick] = useState(0);
 
   useEffect(() => {
@@ -59,6 +66,27 @@ export default function AdhanScreen() {
     checkAutoAdhan();
   }, [coords]);
 
+  // When opened from a prayer notification → auto-show full-screen azan
+  useEffect(() => {
+    if (handledParamRef.current) return;
+    if (params.autoplay === "1" && params.prayer) {
+      handledParamRef.current = true;
+      const p = String(params.prayer) as PrayerName;
+      setActivePrayer(p);
+      setShowAdhanFull(true);
+      handlePlayAdhan(true);
+    }
+  }, [params.autoplay, params.prayer]);
+
+  // Cycle azan text lines while playing
+  useEffect(() => {
+    if (!showAdhanFull || !isPlaying) return;
+    const t = setInterval(() => {
+      setAzanLineIdx((i) => (i + 1) % AZAN_TEXT_LINES.length);
+    }, 3500);
+    return () => clearInterval(t);
+  }, [showAdhanFull, isPlaying]);
+
   const checkAutoAdhan = async () => {
     const times = getPrayerTimes(coords.lat, coords.lng);
     const now = new Date();
@@ -66,10 +94,11 @@ export default function AdhanScreen() {
     for (const p of order) {
       const diffSec = Math.abs((times[p].getTime() - now.getTime()) / 1000);
       if (diffSec < 45) {
-        // Avoid replay within same minute
         const lastTs = lastAdhanRef.current?.ts || 0;
         if (lastAdhanRef.current?.prayer === p && Date.now() - lastTs < 5 * 60 * 1000) return;
         lastAdhanRef.current = { prayer: p, ts: Date.now() };
+        setActivePrayer(p);
+        setShowAdhanFull(true);
         await handlePlayAdhan(true);
         return;
       }
@@ -277,6 +306,47 @@ export default function AdhanScreen() {
         <View style={{ height: 30 }} />
       </ScrollView>
 
+      {/* Full-screen Adhan popup */}
+      <Modal visible={showAdhanFull} transparent animationType="fade" onRequestClose={() => setShowAdhanFull(false)}>
+        <View style={styles.fullScreenAdhan}>
+          <Image
+            source={{ uri: PRAYER_MOSQUE_IMAGES[activePrayer] || MOSQUE_IMG }}
+            style={styles.fullMosqueImg}
+            resizeMode="cover"
+          />
+          <View style={styles.fullOverlay} />
+          <View style={styles.fullContent}>
+            <Text style={styles.fullPrayerLabel}>حان وقت صلاة</Text>
+            <Text style={styles.fullPrayerName}>{PRAYER_LABELS_AR[activePrayer]}</Text>
+            <View style={styles.azanBox}>
+              <Text style={styles.azanText}>{AZAN_TEXT_LINES[azanLineIdx]}</Text>
+            </View>
+            <View style={styles.fullButtons}>
+              <TouchableOpacity
+                testID="stop-adhan-btn"
+                style={[styles.fullBtn, { backgroundColor: "#DC2626" }]}
+                onPress={async () => {
+                  await stopCurrent();
+                  setIsPlaying(false);
+                  setShowAdhanFull(false);
+                }}
+              >
+                <Ionicons name="stop" size={24} color="#FFFFFF" />
+                <Text style={styles.fullBtnText}>إيقاف الأذان</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                testID="close-fullscreen-adhan"
+                style={[styles.fullBtn, { backgroundColor: "rgba(255,255,255,0.18)" }]}
+                onPress={() => setShowAdhanFull(false)}
+              >
+                <Ionicons name="contract" size={22} color="#FFFFFF" />
+                <Text style={styles.fullBtnText}>تصغير</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       {/* Post-adhan Dua Popup */}
       <Modal visible={showDuaPopup} transparent animationType="fade" onRequestClose={closeDuaPopup}>
         <View style={styles.modalBackdrop}>
@@ -401,4 +471,33 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   duaBtnText: { color: "#1a1a1a", fontSize: 16, fontWeight: "800" },
+  fullScreenAdhan: { flex: 1, backgroundColor: "#000" },
+  fullMosqueImg: { ...StyleSheet.absoluteFillObject },
+  fullOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.55)" },
+  fullContent: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24 },
+  fullPrayerLabel: { color: "#F2D77D", fontSize: 22, marginBottom: 4 },
+  fullPrayerName: { color: "#FFFFFF", fontSize: 56, fontWeight: "800", marginBottom: 40 },
+  azanBox: {
+    backgroundColor: "rgba(0,0,0,0.45)",
+    borderColor: COLORS.gold,
+    borderWidth: 1.5,
+    borderRadius: 20,
+    paddingVertical: 24,
+    paddingHorizontal: 28,
+    marginBottom: 40,
+    minHeight: 100,
+    justifyContent: "center",
+  },
+  azanText: { color: "#FFFFFF", fontSize: 30, fontWeight: "700", textAlign: "center", lineHeight: 46 },
+  fullButtons: { flexDirection: "row", gap: 12, alignSelf: "stretch" },
+  fullBtn: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 16,
+    borderRadius: 14,
+    gap: 8,
+  },
+  fullBtnText: { color: "#FFFFFF", fontSize: 16, fontWeight: "800" },
 });

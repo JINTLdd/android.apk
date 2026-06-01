@@ -29,7 +29,7 @@ const CATEGORY_MAP: Record<string, { title: string; items: DhikrItem[] }> = {
 };
 
 export default function Session() {
-  const { category } = useLocalSearchParams<{ category: string }>();
+  const { category, autoplay } = useLocalSearchParams<{ category: string; autoplay?: string }>();
   const { colors } = useTheme();
   const config = CATEGORY_MAP[category || ""] || CATEGORY_MAP.morning;
   const { title, items } = config;
@@ -40,6 +40,7 @@ export default function Session() {
   const [audioLoading, setAudioLoading] = useState(false);
   const [completed, setCompleted] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
+  const autoplayDone = useRef(false);
 
   const current = items[index];
   const isLast = index === items.length - 1;
@@ -53,6 +54,26 @@ export default function Session() {
   useEffect(() => {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   }, [index]);
+
+  // Auto-play first dhikr's audio when entering any of the auto sections
+  // (morning/evening/sleep/wakeup), OR when opened via notification (autoplay=1)
+  useEffect(() => {
+    if (autoplayDone.current) return;
+    const autoSections = ["morning", "evening", "sleep", "wakeup"];
+    const shouldAutoplay = autoplay === "1" || autoSections.includes(category || "");
+    if (shouldAutoplay && current?.audioUrl) {
+      autoplayDone.current = true;
+      (async () => {
+        setAudioLoading(true);
+        await playAudio(current.audioUrl, {
+          onStatus: (s) => setIsPlaying(s.isPlaying),
+          onFinish: () => setIsPlaying(false),
+        });
+        setAudioLoading(false);
+        setIsPlaying(true);
+      })();
+    }
+  }, [category, autoplay, current]);
 
   const handleTap = async () => {
     if (count + 1 >= current.count) {
@@ -172,9 +193,24 @@ export default function Session() {
             {index + 1} من {items.length}
           </Text>
         </View>
-        <TouchableOpacity testID="skip-btn" onPress={handleSkip} hitSlop={10}>
-          <Ionicons name="play-skip-back" size={24} color={COLORS.gold} />
-        </TouchableOpacity>
+        {isPlaying ? (
+          <TouchableOpacity
+            testID="stop-audio-top"
+            onPress={async () => {
+              await stopCurrent();
+              setIsPlaying(false);
+            }}
+            hitSlop={10}
+            style={styles.stopBtnTop}
+          >
+            <Ionicons name="stop" size={20} color="#1a1a1a" />
+            <Text style={styles.stopBtnTopText}>إيقاف</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity testID="skip-btn" onPress={handleSkip} hitSlop={10}>
+            <Ionicons name="play-skip-back" size={24} color={COLORS.gold} />
+          </TouchableOpacity>
+        )}
       </View>
 
       <View style={styles.progressOverall}>
@@ -305,6 +341,16 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(212,175,55,0.45)",
   },
   counterNumber: { color: "#FFFFFF", fontSize: 36, fontWeight: "800" },
+  stopBtnTop: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 12,
+    backgroundColor: COLORS.gold,
+  },
+  stopBtnTopText: { color: "#1a1a1a", fontSize: 13, fontWeight: "800" },
   completedWrap: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24 },
   completedCard: {
     width: "100%",
