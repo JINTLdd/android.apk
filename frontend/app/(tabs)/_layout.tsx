@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
+import { Amiri_400Regular, Amiri_700Bold } from "@expo-google-fonts/amiri";
 import { useTheme, COLORS } from "@/src/context/ThemeContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { View, ActivityIndicator } from "react-native";
@@ -8,9 +9,11 @@ import { View, ActivityIndicator } from "react-native";
 export default function TabsLayout() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  // Make sure the icon font is fully loaded before rendering tabs (fixes
-  // missing-glyph squares on Expo Go cold start).
-  const [fontsLoaded] = useFonts(Ionicons.font);
+  const [fontsLoaded] = useFonts({
+    ...Ionicons.font,
+    Amiri_400Regular,
+    Amiri_700Bold,
+  });
 
   if (!fontsLoaded) {
     return (

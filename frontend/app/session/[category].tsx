@@ -298,9 +298,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 14,
   },
-  dhikrTitle: { color: COLORS.goldLight, fontSize: 18, fontWeight: "700", textAlign: "center" },
+  dhikrTitle: { color: COLORS.goldLight, fontSize: 20, fontWeight: "700", textAlign: "center", fontFamily: "Amiri_700Bold" },
   divider: { height: 1, backgroundColor: "rgba(212,175,55,0.3)", marginVertical: 14 },
-  dhikrText: { color: "#FFFFFF", fontSize: 22, lineHeight: 42, textAlign: "center" },
+  dhikrText: { color: "#FFFFFF", fontSize: 26, lineHeight: 50, textAlign: "center", fontFamily: "Amiri_400Regular" },
   playerCard: {
     flexDirection: "row",
     alignItems: "center",

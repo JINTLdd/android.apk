@@ -171,9 +171,9 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.05)",
     borderWidth: 1,
   },
-  dhikrItemTitle: { color: COLORS.goldLight, fontSize: 14, fontWeight: "700", textAlign: "center" },
+  dhikrItemTitle: { color: COLORS.goldLight, fontSize: 16, fontWeight: "700", textAlign: "center", fontFamily: "Amiri_700Bold" },
   dhikrDivider: { height: 1, backgroundColor: "rgba(212,175,55,0.2)", marginVertical: 10 },
-  dhikrItemText: { color: "#FFFFFF", fontSize: 16, lineHeight: 30, textAlign: "center", marginBottom: 10 },
+  dhikrItemText: { color: "#FFFFFF", fontSize: 20, lineHeight: 38, textAlign: "center", marginBottom: 10, fontFamily: "Amiri_400Regular" },
   playBtn: {
     flexDirection: "row",
     alignItems: "center",
