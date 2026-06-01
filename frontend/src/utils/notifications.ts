@@ -62,6 +62,7 @@ export async function ensureNotificationPermissions(showRationale = true): Promi
 }
 
 async function setupChannelsAndCategories() {
+  if (Platform.OS === "web") return;
   // Action categories: "Stop" button on prayer/adhkar notifications
   await Notifications.setNotificationCategoryAsync("PRAYER_CATEGORY", [
     { identifier: "STOP_ACTION", buttonTitle: "إيقاف", options: { isDestructive: true, opensAppToForeground: false } },

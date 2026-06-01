@@ -77,6 +77,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="session/[category]" options={{ presentation: "card" }} />
+        <Stack.Screen name="qibla" options={{ presentation: "card" }} />
       </Stack>
     </ThemeProvider>
   );
