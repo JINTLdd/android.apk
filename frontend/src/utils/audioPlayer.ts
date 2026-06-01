@@ -1,30 +1,61 @@
-import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
+// Audio playback wrapper built on expo-audio (Expo SDK 54+)
+//
+// Public API kept intentionally compatible with the previous expo-av based
+// implementation so that callers do not need to change:
+//   - configureAudioMode()
+//   - playAudio(url, { onStatus, onFinish })
+//   - pauseCurrent()
+//   - resumeCurrent()
+//   - stopCurrent()
+//   - getCurrentSound() -> the underlying AudioPlayer (or null)
+//
+// Internally we use `createAudioPlayer` (imperative API) because audio is
+// triggered from non-component code paths (e.g. scheduled auto-play).
+
+import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from "expo-audio";
+import type { EventSubscription } from "expo-modules-core";
 import { getLocalAudioPath } from "./audioDownload";
 
-let currentSound: Audio.Sound | null = null;
+let currentPlayer: AudioPlayer | null = null;
+let currentStatusSub: EventSubscription | null = null;
+let lastFinishHandled = false;
 
 export async function configureAudioMode() {
-  await Audio.setAudioModeAsync({
-    allowsRecordingIOS: false,
-    staysActiveInBackground: true,
-    playsInSilentModeIOS: true,
-    interruptionModeIOS: InterruptionModeIOS.DoNotMix,
-    interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
-    shouldDuckAndroid: true,
-    playThroughEarpieceAndroid: false,
-  });
+  try {
+    await setAudioModeAsync({
+      playsInSilentMode: true,
+      shouldPlayInBackground: true,
+      interruptionMode: "doNotMix",
+      shouldRouteThroughEarpiece: false,
+    });
+  } catch (e) {
+    console.warn("configureAudioMode error", e);
+  }
 }
 
 export async function stopCurrent() {
-  if (currentSound) {
+  if (currentStatusSub) {
     try {
-      await currentSound.stopAsync();
-      await currentSound.unloadAsync();
+      currentStatusSub.remove();
     } catch {
       // ignore
     }
-    currentSound = null;
+    currentStatusSub = null;
   }
+  if (currentPlayer) {
+    try {
+      currentPlayer.pause();
+    } catch {
+      // ignore
+    }
+    try {
+      currentPlayer.remove();
+    } catch {
+      // ignore
+    }
+    currentPlayer = null;
+  }
+  lastFinishHandled = false;
 }
 
 export interface PlayCallbacks {
@@ -32,31 +63,45 @@ export interface PlayCallbacks {
   onFinish?: () => void;
 }
 
-export async function playAudio(url: string, callbacks?: PlayCallbacks): Promise<Audio.Sound | null> {
+export async function playAudio(
+  url: string,
+  callbacks?: PlayCallbacks
+): Promise<AudioPlayer | null> {
   if (!url) return null;
   await stopCurrent();
 
-  // Prefer local downloaded file
+  // Prefer the offline-downloaded local copy when available.
   const local = await getLocalAudioPath(url);
   const source = local ? { uri: local } : { uri: url };
 
   try {
-    const { sound } = await Audio.Sound.createAsync(source, { shouldPlay: true });
-    currentSound = sound;
+    const player = createAudioPlayer(source, { updateInterval: 300 });
+    currentPlayer = player;
+    lastFinishHandled = false;
 
-    sound.setOnPlaybackStatusUpdate((status: any) => {
-      if (!status.isLoaded) return;
+    // Subscribe to playback status updates.
+    currentStatusSub = player.addListener("playbackStatusUpdate", (status) => {
+      if (!status || !status.isLoaded) return;
+      const positionMs = Math.round((status.currentTime || 0) * 1000);
+      const durationMs = Math.round((status.duration || 0) * 1000);
       callbacks?.onStatus?.({
-        positionMs: status.positionMillis || 0,
-        durationMs: status.durationMillis || 0,
-        isPlaying: !!status.isPlaying,
+        positionMs,
+        durationMs,
+        isPlaying: !!status.playing,
       });
-      if (status.didJustFinish) {
-        callbacks?.onFinish?.();
+      if (status.didJustFinish && !lastFinishHandled) {
+        lastFinishHandled = true;
+        try {
+          callbacks?.onFinish?.();
+        } catch (e) {
+          console.warn("onFinish callback error", e);
+        }
       }
     });
 
-    return sound;
+    // Start playback immediately.
+    player.play();
+    return player;
   } catch (e) {
     console.warn("playAudio error", e);
     return null;
@@ -64,9 +109,9 @@ export async function playAudio(url: string, callbacks?: PlayCallbacks): Promise
 }
 
 export async function pauseCurrent() {
-  if (currentSound) {
+  if (currentPlayer) {
     try {
-      await currentSound.pauseAsync();
+      currentPlayer.pause();
     } catch {
       // ignore
     }
@@ -74,15 +119,15 @@ export async function pauseCurrent() {
 }
 
 export async function resumeCurrent() {
-  if (currentSound) {
+  if (currentPlayer) {
     try {
-      await currentSound.playAsync();
+      currentPlayer.play();
     } catch {
       // ignore
     }
   }
 }
 
-export function getCurrentSound() {
-  return currentSound;
+export function getCurrentSound(): AudioPlayer | null {
+  return currentPlayer;
 }

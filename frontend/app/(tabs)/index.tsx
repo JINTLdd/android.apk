@@ -16,7 +16,7 @@ interface CategoryCard {
 }
 
 const categories: CategoryCard[] = [
-  { id: "qibla", title: "اتجاه القبلة", subtitle: "البوصلة من Google Qibla Finder", icon: "compass", color: "#D4AF37" },
+  { id: "qibla", title: "اتجاه القبلة", subtitle: "بوصلة الكعبة بدون إنترنت", icon: "compass", color: "#D4AF37" },
   { id: "morning", title: "أذكار الصباح", subtitle: "24 ذكراً • تشتغل تلقائياً", icon: "sunny", color: "#F59E0B" },
   { id: "evening", title: "أذكار المساء", subtitle: "24 ذكراً • تشتغل تلقائياً", icon: "moon", color: "#6366F1" },
   { id: "wakeup", title: "أذكار الاستيقاظ", subtitle: "عند الاستيقاظ من النوم", icon: "alarm-outline", color: "#10B981" },
