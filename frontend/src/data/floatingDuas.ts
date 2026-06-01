@@ -22,11 +22,11 @@ export const FLOATING_DUAS = [
   "ربِّ اجعلني مقيم الصلاة ومن ذريتي ربَّنا وتقبَّل دعاء",
 ];
 
-// Mosque images per prayer (day vs night)
+// 5 mosque images mapped one per prayer (you sent 5 images)
 export const PRAYER_MOSQUE_IMAGES: Record<string, string> = {
   fajr: "https://customer-assets.emergentagent.com/job_adhkary-app/artifacts/vgg574fa_IMG_20260520_222015_505.jpg",
   dhuhr: "https://customer-assets.emergentagent.com/job_adhkary-app/artifacts/4fg3tybm_IMG_20260520_222015_953.jpg",
-  asr: "https://customer-assets.emergentagent.com/job_adhkary-app/artifacts/vgg574fa_IMG_20260520_222015_505.jpg",
+  asr: "https://customer-assets.emergentagent.com/job_adhkary-app/artifacts/0jgkx3xh_IMG_20260520_222015_725.jpg",
   maghrib: "https://customer-assets.emergentagent.com/job_adhkary-app/artifacts/f1dtrf2g_IMG_20260520_222015_583.jpg",
   isha: "https://customer-assets.emergentagent.com/job_adhkary-app/artifacts/gk5zsctn_IMG_20260520_222016_170.jpg",
 };

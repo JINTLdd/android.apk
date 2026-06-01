@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Alert, Platform, Linking } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Platform, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import * as Location from "expo-location";
-import { Magnetometer } from "expo-sensors";
 import { useTheme, COLORS } from "@/src/context/ThemeContext";
 import { PatternBackground } from "@/src/components/PatternBackground";
 
@@ -71,28 +70,20 @@ export default function QiblaScreen() {
     })();
   }, []);
 
-  // Subscribe to magnetometer
+  // Subscribe to device heading via Location API (more reliable cross-platform
+  // than raw Magnetometer; uses calibrated compass sensor fusion)
   useEffect(() => {
-    let sub: { remove: () => void } | null = null;
+    let sub: Location.LocationSubscription | null = null;
     (async () => {
       try {
-        const available = await Magnetometer.isAvailableAsync();
-        if (!available) {
-          setSensorAvailable(false);
-          return;
-        }
-        Magnetometer.setUpdateInterval(150);
-        sub = Magnetometer.addListener((data) => {
-          // Convert magnetometer xy to compass heading (0..360)
-          let angle = Math.atan2(data.y, data.x) * (180 / Math.PI);
-          angle = angle + 90; // align north
-          if (angle < 0) angle += 360;
-          if (angle >= 360) angle -= 360;
-          // Smooth jitter
-          const diff = Math.abs(angle - lastHeadingRef.current);
+        sub = await Location.watchHeadingAsync((h) => {
+          // Use trueHeading if available, else magHeading
+          const v = h.trueHeading >= 0 ? h.trueHeading : h.magHeading;
+          if (v < 0) return;
+          const diff = Math.abs(v - lastHeadingRef.current);
           if (diff > 1.5 || diff > 350) {
-            lastHeadingRef.current = angle;
-            setHeading(angle);
+            lastHeadingRef.current = v;
+            setHeading(v);
           }
         });
       } catch {
