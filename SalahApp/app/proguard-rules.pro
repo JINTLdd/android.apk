@@ -1,6 +1,3 @@
-# Keep prayer time library classes
--keep class com.batoulapps.adhan.** { *; }
-
 # Keep model classes (used by Gson / serialization)
 -keep class com.salah.app.models.** { *; }
 
