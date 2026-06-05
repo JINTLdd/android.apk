@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand -->
+    <color name="gold">#D4AF37</color>
+    <color name="gold_light">#F4E29A</color>
+
+    <!-- Light theme -->
+    <color name="bg_primary">#F8F4ED</color>
+    <color name="card_bg">#FFFFFF</color>
+    <color name="text_primary">#1F1B16</color>
+    <color name="text_secondary">#5C5247</color>
+    <color name="divider">#E7DFD2</color>
+
+    <!-- Status -->
+    <color name="status_bar">#0F1419</color>
+</resources>
