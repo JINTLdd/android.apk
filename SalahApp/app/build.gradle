@@ -72,8 +72,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'com.google.android.gms:play-services-location:21.1.0'
 
-    // Islamic prayer time calculation (Adhan library by Batoulapps)
-    implementation 'com.batoulapps.adhan:adhan:1.4.0'
+    // Islamic prayer time calculation (Adhan-java by Batoulapps via JitPack)
+    implementation 'com.github.batoulapps:adhan-java:adhan-java-1.2.0'
 
     testImplementation 'junit:junit:4.13.2'
 }
