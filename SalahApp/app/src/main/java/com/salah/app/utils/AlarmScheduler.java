@@ -69,6 +69,20 @@ public class AlarmScheduler {
         );
         setExact(ctx, p.time.getTime(), pi);
         Log.i(TAG, "Scheduled " + p.prayer.id + " at " + p.time);
+
+        // Also schedule a pre-prayer reminder 10 minutes before the adhan.
+        long preTime = p.time.getTime() - 10L * 60_000L;
+        if (preTime > System.currentTimeMillis()) {
+            Intent pre = new Intent(ctx, com.salah.app.receivers.PrePrayerReceiver.class);
+            pre.putExtra(com.salah.app.receivers.PrePrayerReceiver.EXTRA_PRAYER_AR, p.getArabicName());
+            pre.putExtra(com.salah.app.receivers.PrePrayerReceiver.EXTRA_MINUTES, 10);
+            PendingIntent prePI = PendingIntent.getBroadcast(
+                ctx, requestCodeForPrayer(p.prayer.id) + 500, pre,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+            setExact(ctx, preTime, prePI);
+            Log.i(TAG, "Pre-prayer reminder for " + p.prayer.id + " at " + new java.util.Date(preTime));
+        }
     }
 
     public static void scheduleAthkar(Context ctx, String type, int hour, int minute) {
