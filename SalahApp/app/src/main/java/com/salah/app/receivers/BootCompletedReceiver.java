@@ -24,6 +24,13 @@ public class BootCompletedReceiver extends BroadcastReceiver {
             || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action)) {
             Log.i(TAG, "Re-scheduling alarms after " + action);
             AlarmScheduler.rescheduleAll(context);
+            // Re-schedule all custom reminders so they survive reboot.
+            try {
+                com.salah.app.utils.SleepAdhkarScheduler.schedule(context);
+                com.salah.app.utils.FastingReminderScheduler.scheduleAll(context);
+                com.salah.app.utils.HourlyDuaScheduler.scheduleNext(context);
+                com.salah.app.utils.KahfReminderScheduler.schedule(context);
+            } catch (Throwable ignored) {}
         }
     }
 }

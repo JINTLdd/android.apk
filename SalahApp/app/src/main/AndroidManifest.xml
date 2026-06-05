@@ -90,6 +90,9 @@
         <receiver android:name=".receivers.AthkarAlarmReceiver" android:exported="false">
             <intent-filter><action android:name="com.salah.app.ATHKAR_ALARM"/></intent-filter>
         </receiver>
+        <receiver android:name=".receivers.FastingReminderReceiver" android:exported="false"/>
+        <receiver android:name=".receivers.HourlyDuaReceiver" android:exported="false"/>
+        <receiver android:name=".receivers.KahfReminderReceiver" android:exported="false"/>
         <receiver android:name=".receivers.BootCompletedReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

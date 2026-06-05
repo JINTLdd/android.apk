@@ -73,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
         // Schedule daily "we miss you" adhkar reminders
         AdhkarReminderScheduler.scheduleAll(this);
         com.salah.app.utils.SleepAdhkarScheduler.schedule(this);
+        com.salah.app.utils.FastingReminderScheduler.scheduleAll(this);
+        com.salah.app.utils.HourlyDuaScheduler.scheduleNext(this);
+        com.salah.app.utils.KahfReminderScheduler.schedule(this);
     }
 
     private void bindCard(int id, int titleRes, int iconRes, Runnable action) {
