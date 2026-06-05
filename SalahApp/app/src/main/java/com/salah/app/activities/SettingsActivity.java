@@ -166,18 +166,26 @@ public class SettingsActivity extends AppCompatActivity {
     }
     private int indexForAdhan(String fileName) {
         switch (fileName) {
-            case "adhan_makkah":  return 1;
-            case "adhan_kuwait":  return 2;
-            case "adhan_egypt":   return 3;
+            case "adhan_kuwait":      return 1;
+            case "adhan_haram_makki": return 2;
+            case "adhan_makkah":      return 3;
+            case "adhan_quds":        return 4;
+            case "adhan_brunei":      return 5;
+            case "adhan_afasy":       return 6;
+            case "adhan_other":       return 7;
             case "adhan_madinah":
-            default:              return 0;
+            default:                  return 0;
         }
     }
     private String adhanFileForIndex(int pos) {
         switch (pos) {
-            case 1: return "adhan_makkah";
-            case 2: return "adhan_kuwait";
-            case 3: return "adhan_egypt";
+            case 1: return "adhan_kuwait";
+            case 2: return "adhan_haram_makki";
+            case 3: return "adhan_makkah";
+            case 4: return "adhan_quds";
+            case 5: return "adhan_brunei";
+            case 6: return "adhan_afasy";
+            case 7: return "adhan_other";
             default: return "adhan_madinah";
         }
     }

@@ -19,8 +19,12 @@
 
     <string-array name="adhan_labels">
         <item>الحرم المدني</item>
-        <item>الحرم المكي</item>
         <item>أذان الكويت</item>
-        <item>أذان مصر</item>
+        <item>الحرم المكي</item>
+        <item>مكة المكرمة</item>
+        <item>القدس الشريف</item>
+        <item>أذان بروناي</item>
+        <item>مشاري العفاسي</item>
+        <item>أذان آخر</item>
     </string-array>
 </resources>

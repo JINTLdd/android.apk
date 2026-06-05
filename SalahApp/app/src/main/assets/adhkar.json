@@ -1233,41 +1233,49 @@
     {
       "id": "madinah",
       "name": "الحرم المدني",
+      "rawFile": "adhan_madinah",
       "url": "https://ia800703.us.archive.org/15/items/90---azan---90---azan--many----sound----mp3---alazan/034--.mp3"
     },
     {
       "id": "kuwait",
       "name": "أذان الكويت",
+      "rawFile": "adhan_kuwait",
       "url": "https://ia800703.us.archive.org/15/items/90---azan---90---azan--many----sound----mp3---alazan/028---1.mp3"
     },
     {
       "id": "haram_makki",
       "name": "الحرم المكي",
+      "rawFile": "adhan_haram_makki",
       "url": "https://ia800703.us.archive.org/15/items/90---azan---90---azan--many----sound----mp3---alazan/033--.mp3"
     },
     {
       "id": "makkah",
       "name": "مكة المكرمة",
+      "rawFile": "adhan_makkah",
       "url": "https://ia800703.us.archive.org/15/items/90---azan---90---azan--many----sound----mp3---alazan/016---2.mp3"
     },
     {
       "id": "quds",
       "name": "القدس الشريف",
+      "rawFile": "adhan_quds",
       "url": "https://ia800703.us.archive.org/15/items/90---azan---90---azan--many----sound----mp3---alazan/007--.mp3"
     },
     {
       "id": "brunei",
-      "name": "بروناي",
+      "name": "أذان بروناي",
+      "rawFile": "adhan_brunei",
       "url": "https://ia800703.us.archive.org/15/items/90---azan---90---azan--many----sound----mp3---alazan/004----1.mp3"
     },
     {
       "id": "afasy",
       "name": "مشاري العفاسي",
+      "rawFile": "adhan_afasy",
       "url": "https://ia800703.us.archive.org/15/items/90---azan---90---azan--many----sound----mp3---alazan/038-1.mp3"
     },
     {
       "id": "other",
       "name": "أذان آخر",
+      "rawFile": "adhan_other",
       "url": "https://ia800703.us.archive.org/15/items/90---azan---90---azan--many----sound----mp3---alazan/055-.mp3"
     }
   ],
@@ -1773,5 +1781,6 @@
     "quds": {
       "name": "القدس الشريف"
     }
-  }
+  },
+  "fullAdhkarAudio": "https://ia800305.us.archive.org/16/items/Hesn_Al_Moslem_uP_bY_mUSLEm/Hesn_uP_bY_mUSLEm-028.mp3"
 }
