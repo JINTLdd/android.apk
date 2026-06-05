@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_primary">#0F1419</color>
-    <color name="card_bg">#1A2027</color>
+    <!-- Night theme (#2D2438) -->
+    <color name="bg_primary">#2D2438</color>
+    <color name="card_bg">#3A2F4A</color>
     <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#B0B8C0</color>
-    <color name="divider">#2A3239</color>
+    <color name="text_secondary">#C9C2D6</color>
+    <color name="divider">#5A4D70</color>
     <color name="gold">#E4C158</color>
     <color name="gold_light">#FFE99A</color>
-    <color name="status_bar">#0F1419</color>
+    <color name="status_bar">#1F1828</color>
+    <color name="success_green">#22C55E</color>
+    <color name="danger_red">#EF4444‎</color>
 </resources>

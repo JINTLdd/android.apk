@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Brand -->
+    <!-- Brand (per user spec) -->
     <color name="gold">#D4AF37</color>
     <color name="gold_light">#F4E29A</color>
 
-    <!-- Light theme -->
-    <color name="bg_primary">#F8F4ED</color>
-    <color name="card_bg">#FFFFFF</color>
-    <color name="text_primary">#1F1B16</color>
-    <color name="text_secondary">#5C5247</color>
-    <color name="divider">#E7DFD2</color>
+    <!-- Light theme (Day mode background #355070) -->
+    <color name="bg_primary">#355070</color>
+    <color name="card_bg">#3F5F85</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#D8DDE5</color>
+    <color name="divider">#557AAB</color>
 
-    <!-- Status -->
-    <color name="status_bar">#0F1419</color>
+    <color name="status_bar">#243A52</color>
+    <color name="success_green">#22C55E</color>
+    <color name="danger_red">#EF4444‎</color>
 </resources>

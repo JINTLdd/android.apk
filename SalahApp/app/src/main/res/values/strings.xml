@@ -1,13 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App identity -->
-    <string name="app_name">أوقات الصلاة</string>
+    <string name="app_name">أذكاري</string>
 
-    <!-- Main screen -->
+    <!-- Main / hub screen -->
     <string name="city_unknown">موقع غير معروف</string>
     <string name="next_prayer_fmt">الصلاة القادمة: %1$s</string>
     <string name="btn_refresh">تحديث الموقع</string>
     <string name="btn_settings">الإعدادات</string>
+
+    <!-- Welcome / Splash -->
+    <string name="welcome_message">للاستمتاع بالتطبيق بدون إنترنت، يرجى تحميل الصوتيات مرة واحدة فقط ،أجر 60 ميجا</string>
+    <string name="btn_download_audio">تحميل الصوتيات الآن</string>
+    <string name="btn_skip_download">تخطي — سأحمل لاحقاً</string>
+    <string name="welcome_preparing">جارٍ التحضير…</string>
+    <string name="welcome_pct_fmt">%1$d%%</string>
+    <string name="welcome_dl_fmt">تحميل %1$d من %2$d</string>
+    <string name="welcome_done_fmt">تم التحميل بنجاح ✅ (%1$d صوت ، %2$d فشل)</string>
+    <string name="welcome_enter_app">ادخل التطبيق</string>
+
+    <!-- Sections / tabs -->
+    <string name="tab_morning">أذكار الصباح</string>
+    <string name="tab_evening">أذكار المساء</string>
+    <string name="tab_after_salah">أذكار بعد الصلاة</string>
+    <string name="tab_wakeup">أذكار الاستيقاظ</string>
+    <string name="tab_iftitah">دعاء الاستفتاح</string>
+    <string name="tab_duas">أدعية متنوعة</string>
+    <string name="tab_tasbih">المسبحة</string>
+    <string name="tab_settings">الإعدادات</string>
+
+    <!-- Session -->
+    <string name="session_position_fmt">%1$d / %2$d</string>
+    <string name="session_target_fmt">الهدف: %1$d مرة</string>
+    <string name="session_completed_fmt">انتهت %1$s</string>
+
+    <!-- Tasbih -->
+    <string name="tasbih_target_fmt">الهدف: %1$d</string>
+    <string name="tasbih_stage_fmt">المرحلة %1$d من %2$d</string>
+    <string name="tasbih_completed">تمّت جلسة التسبيح — تقبّل الله منك</string>
+    <string name="btn_reset">إعادة تعيين</string>
+    <string name="btn_close">إغلاق</string>
+
+    <!-- Post Adhan -->
+    <string name="post_adhan_title">دعاء بعد الأذان</string>
+    <string name="dua_after_adhan">دعاء بعد الأذان</string>
 
     <!-- Settings -->
     <string name="title_settings">الإعدادات</string>
@@ -20,10 +56,10 @@
     <string name="sw_evening">تذكير أذكار المساء</string>
     <string name="sw_vibrate">اهتزاز عند التذكير</string>
     <string name="sw_dark">الوضع الليلي</string>
-    <string name="exact_alarm_needed">يجب السماح بالمنبهات الدقيقة لضمان إطلاق الأذان في وقته الصحيح</string>
+    <string name="exact_alarm_needed">يجب السماح بالمنبهات الدقيقة لضمان إطلاق الأذان في وقته</string>
     <string name="exact_alarm_ok">منبهات دقيقة: مفعّلة ✓</string>
-    <string name="btn_exact_alarm">فتح إعدادات المنبهات الدقيقة</string>
-    <string name="btn_battery">إيقاف توفير البطارية للتطبيق</string>
+    <string name="btn_exact_alarm">فتح إعدادات المنبهات</string>
+    <string name="btn_battery">إيقاف توفير البطارية</string>
     <string name="btn_save">حفظ الإعدادات</string>
 
     <!-- Notifications -->
@@ -36,11 +72,12 @@
     <string name="notif_prayer_text_fmt">حان وقت صلاة %1$s</string>
     <string name="notif_prayer_subtext">إنّ الصّلاةَ كانتْ عَلى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</string>
     <string name="notif_action_stop">إيقاف</string>
-    <string name="notif_morning_athkar_title">أذكار الصباح</string>
-    <string name="notif_morning_athkar_text">ابدأ يومك بأذكار الصباح — جعلها الله في ميزان حسناتك</string>
-    <string name="notif_evening_athkar_title">أذكار المساء</string>
-    <string name="notif_evening_athkar_text">أمسينا وأمسى الملك لله — لا تنس أذكار المساء</string>
+    <string name="notif_morning_athkar_title">نفتقدك 👋</string>
+    <string name="notif_morning_athkar_text">لا تنس أذكار الصباح — ابدأ يومك برحمة الله</string>
+    <string name="notif_evening_athkar_title">نفتقدك 🌙</string>
+    <string name="notif_evening_athkar_text">لا تنس أذكار المساء — أمسينا وأمسى الملك لله</string>
     <string name="notif_fg_title">تشغيل الأذان</string>
+    <string name="notif_playing_adhkar">جارٍ تشغيل الذكر</string>
 
     <!-- Toasts -->
     <string name="toast_need_location">يحتاج التطبيق إلى إذن الموقع لحساب أوقات الصلاة بدقّة</string>

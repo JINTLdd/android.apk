@@ -78,7 +78,15 @@ public class AdhanService extends Service {
                 .setUsage(AudioAttributes.USAGE_ALARM)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build());
-            player.setOnCompletionListener(mp -> stopPlaybackAndSelf());
+            player.setOnCompletionListener(mp -> {
+                // After the adhan completes, launch the Post-Adhan dua popup over lock screen.
+                try {
+                    Intent post = new Intent(this, com.salah.app.activities.PostAdhanActivity.class);
+                    post.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(post);
+                } catch (Throwable ignored) {}
+                stopPlaybackAndSelf();
+            });
             player.setOnErrorListener((mp, what, extra) -> {
                 Log.e(TAG, "MediaPlayer error " + what + "/" + extra);
                 stopPlaybackAndSelf();
