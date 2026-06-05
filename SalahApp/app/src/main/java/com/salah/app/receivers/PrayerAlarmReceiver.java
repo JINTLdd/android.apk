@@ -40,6 +40,19 @@ public class PrayerAlarmReceiver extends BroadcastReceiver {
             context.startService(svc);
         }
 
+        // 1b) Launch SyncedAdhanActivity full-screen to display each phrase in sync
+        try {
+            Intent sync = new Intent(context, com.salah.app.activities.SyncedAdhanActivity.class);
+            sync.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            sync.putExtra(com.salah.app.activities.SyncedAdhanActivity.EXTRA_PRAYER, prayerId);
+            String muezzin = com.salah.app.utils.PreferencesManager.load(context).selectedAdhanFile;
+            if (muezzin == null || muezzin.isEmpty()) muezzin = "madinah";
+            // Strip "adhan_" prefix if present.
+            if (muezzin.startsWith("adhan_")) muezzin = muezzin.substring(6);
+            sync.putExtra(com.salah.app.activities.SyncedAdhanActivity.EXTRA_MUEZZIN, muezzin);
+            context.startActivity(sync);
+        } catch (Throwable ignored) {}
+
         // 2) Schedule the NEXT prayer alarm immediately so chaining never breaks.
         try {
             UserSettings settings = PreferencesManager.load(context);

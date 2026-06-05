@@ -62,9 +62,17 @@ public class SyncedAdhanActivity extends AppCompatActivity {
         String prayer = getIntent().getStringExtra(EXTRA_PRAYER);
         if (prayer == null) prayer = "fajr";
 
-        // Pick a background drawable based on day/night prayer.
-        boolean night = "maghrib".equals(prayer) || "isha".equals(prayer);
-        imgBg.setImageResource(night ? R.drawable.bg_prayer_night : R.drawable.bg_prayer_day);
+        // Pick a mosque background image specific to each prayer.
+        int bgRes;
+        switch (prayer) {
+            case "fajr":    bgRes = R.drawable.mosque_fajr; break;
+            case "dhuhr":   bgRes = R.drawable.mosque_dhuhr; break;
+            case "asr":     bgRes = R.drawable.mosque_asr; break;
+            case "maghrib": bgRes = R.drawable.mosque_maghrib; break;
+            case "isha":    bgRes = R.drawable.mosque_isha; break;
+            default:        bgRes = R.drawable.mosque_fajr;
+        }
+        imgBg.setImageResource(bgRes);
 
         // Localized prayer name
         String arPrayer = arabicPrayer(prayer);
