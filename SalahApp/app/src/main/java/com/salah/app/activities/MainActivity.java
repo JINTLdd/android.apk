@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Schedule daily "we miss you" adhkar reminders
         AdhkarReminderScheduler.scheduleAll(this);
+        com.salah.app.utils.SleepAdhkarScheduler.schedule(this);
     }
 
     private void bindCard(int id, int titleRes, int iconRes, Runnable action) {

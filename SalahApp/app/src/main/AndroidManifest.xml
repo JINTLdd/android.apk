@@ -66,6 +66,15 @@
             android:parentActivityName=".activities.MainActivity"/>
 
         <activity
+            android:name=".activities.SyncedAdhanActivity"
+            android:exported="false"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.SalahApp"/>
+
+        <activity
             android:name=".activities.PostAdhanActivity"
             android:exported="false"
             android:showOnLockScreen="true"

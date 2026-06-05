@@ -71,6 +71,8 @@ public class AdhkarRepository {
             case "duas":        return "أدعية متنوعة";
             case "afterPrayer": return "أدعية مختارة";
             case "extra":       return "فضائل الأذكار";
+            case "sleep":       return "أذكار النوم";
+            case "fadl":        return "فضائل وأذكار";
             default:            return "الأذكار";
         }
     }

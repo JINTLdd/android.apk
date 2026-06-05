@@ -25,6 +25,20 @@ public class AthkarAlarmReceiver extends BroadcastReceiver {
         if (type == null) type = "morning";
         Log.i(TAG, "AthkarAlarm fired: " + type);
 
+        // For "sleep" type at 21:00 \u2014 directly auto-play the first sleep dhikr audio
+        // and post a notification so the user can open the session.
+        if ("sleep".equals(type)) {
+            java.util.List<com.salah.app.models.DhikrItem> list =
+                com.salah.app.utils.AdhkarRepository.getCategory(context, "sleep");
+            if (!list.isEmpty()) {
+                com.salah.app.models.DhikrItem first = list.get(0);
+                com.salah.app.services.AdhkarPlaybackService.play(context, first.audioUrl, first.title);
+            }
+            // Re-schedule for tomorrow 21:00
+            com.salah.app.utils.SleepAdhkarScheduler.schedule(context);
+            return;
+        }
+
         try {
             android.app.Notification n = NotificationHelper.buildAthkarNotification(context, type);
             int notifId = "morning".equals(type) ? 201 : 202;
